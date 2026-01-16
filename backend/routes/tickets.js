@@ -11,13 +11,21 @@ const ensureRole = (roles) => (req, res, next) => {
     next();
 };
 
-// @desc    Get All Tickets (Scoped to Org)
+// @desc    Get All Tickets (Scoped to Org, optionally filtered by Project)
 // @route   GET /api/tickets
 router.get('/', protect, async (req, res) => {
     try {
-        const tickets = await Ticket.find({ organization: req.user.organization })
+        const query = { organization: req.user.organization };
+
+        // Filter by project if provided
+        if (req.query.project) {
+            query.project = req.query.project;
+        }
+
+        const tickets = await Ticket.find(query)
             .populate('assignee', 'displayName email')
             .populate('created_by', 'displayName')
+            .populate('project', 'name')
             .sort({ created_at: -1 });
         res.json(tickets);
     } catch (err) {
