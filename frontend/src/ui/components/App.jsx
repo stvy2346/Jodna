@@ -199,14 +199,30 @@ const App = ({ addOnUISdk, sandboxProxy }) => {
     console.log('isAdmin', isAdmin);
     console.log('hasOrganization', hasOrganization);
     // Admin without organization -> Create Organization
-    if (isAdmin && !hasOrganization) {
-        return (
-            <Theme system="express" scale="medium" color="light">
-                <div className="app-container">
-                    <CreateOrganization onOrgCreated={handleOrgCreated} user={user} />
-                </div>
-            </Theme>
-        );
+    if(isAdmin) {
+        if(!hasOrganization){
+            return (
+                <Theme system="express" scale="medium" color="light">
+                    <div className="app-container">
+                        <CreateOrganization onOrgCreated={handleOrgCreated} user={user} />
+                    </div>
+                </Theme>
+            );
+        }else{
+            return (
+                <Theme system="express" scale="medium" color="light">
+                    <div className="app-container">
+                        <Header
+                            currentTab="Projects"
+                            setCurrentTab={() => {}}
+                            user={user}
+                            onLogout={handleLogout}
+                        />
+                        <Projects user={user} sandboxProxy={sandboxProxy} />
+                    </div>
+                </Theme>
+            );
+        }
     }
 
     // Non-admin without organization -> Show Join Organization Screen
