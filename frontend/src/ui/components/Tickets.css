@@ -1,0 +1,196 @@
+.tickets-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.tickets-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.tickets-header h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #2c2c2c;
+}
+
+.tickets-filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 8px 16px;
+  background: white;
+  border: 1px solid #d1d1d1;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover {
+  border-color: #1473e6;
+  color: #1473e6;
+}
+
+.filter-btn.active {
+  background: #1473e6;
+  color: white;
+  border-color: #1473e6;
+}
+
+.tickets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.no-tickets {
+  text-align: center;
+  padding: 48px 24px;
+  color: #6e6e6e;
+  font-size: 14px;
+}
+
+.ticket-card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.ticket-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.ticket-main {
+  flex: 1;
+}
+
+.ticket-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2c2c2c;
+  margin-bottom: 8px;
+}
+
+.ticket-description {
+  font-size: 14px;
+  color: #6e6e6e;
+  margin-bottom: 12px;
+}
+
+.ticket-footer {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: #6e6e6e;
+  flex-wrap: wrap;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.status-open { 
+  background: #e3f2fd; 
+  color: #1976d2; 
+}
+
+.status-inprogress { 
+  background: #fff3e0; 
+  color: #f57c00; 
+}
+
+.status-review { 
+  background: #f3e5f5; 
+  color: #7b1fa2; 
+}
+
+.status-done { 
+  background: #e8f5e9; 
+  color: #388e3c; 
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Modal Box */
+.modal-content {
+  background: #fff;
+  width: 450px;
+  max-width: 90%;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h2 {
+  margin-top: 0;
+}
+
+.modal-details p {
+  margin: 8px 0;
+}
+
+.btn-secondary {
+  margin-top: 16px;
+  padding: 8px 16px;
+  border: none;
+  background: #ddd;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-section {
+  margin-top: 16px;
+}
+
+.modal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.modal-grid label {
+  font-size: 12px;
+  color: #666;
+}
+
+.modal-footer {
+  margin-top: 24px;
+  text-align: right;
+}
