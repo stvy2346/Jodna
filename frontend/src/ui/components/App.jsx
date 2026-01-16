@@ -160,7 +160,7 @@ const App = ({ addOnUISdk, sandboxProxy }) => {
         );
     }
 
-    // Show login page if not authenticated
+// Show login page if not authenticated
     if (!isAuthenticated) {
         return (
             <Theme system="express" scale="medium" color="light">
@@ -172,7 +172,33 @@ const App = ({ addOnUISdk, sandboxProxy }) => {
     // Debug logging
     console.log('Rendering authenticated view', { user, organization, isAuthenticated });
 
-    // Authenticated + Has Organization (or no org check needed)
+    // Check user role and organization status
+    const isAdmin = user && user.role === 'admin';
+    const hasOrganization = organization !== null;
+
+    // Admin without organization -> Create Organization
+    if (isAdmin && !hasOrganization) {
+        return (
+            <Theme system="express" scale="medium" color="light">
+                <div className="app-container">
+                    <CreateOrganization onOrgCreated={handleOrgCreated} />
+                </div>
+            </Theme>
+        );
+    }
+
+    // Non-admin without organization -> Show message
+    if (!isAdmin && !hasOrganization) {
+        return (
+            <Theme system="express" scale="medium" color="light">
+                <div className="app-container">
+                    <NoOrganizationMessage />
+                </div>
+            </Theme>
+        );
+    }
+
+    // Has organization (admin or non-admin) -> Show full app
     const renderPage = () => {
         switch (currentTab) {
             case 'Projects':
