@@ -12,6 +12,7 @@ const Projects = ({ user, sandboxProxy }) => {
   const [selectedProject, setSelectedProject] = useState(null);
   const [newProject, setNewProject] = useState({ name: '', description: '' });
   const [creating, setCreating] = useState(false);
+  const [filter, setFilter] = useState('All');
 
   const canCreateProject = user.role === 'ADMIN' || user.role === 'MANAGER';
 
@@ -53,6 +54,50 @@ const Projects = ({ user, sandboxProxy }) => {
     }
   };
 
+  const handleStatusChange = async (e, project, newStatus) => {
+    e.stopPropagation();
+    console.log(`[JODNA] Click registered. New Status: ${newStatus} for ${project.name}`);
+
+    if (project.status === newStatus) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      console.log(`[JODNA] Token found: ${!!token}, Sending PUT to ${BACKEND_URL}/api/projects/${project._id}`);
+      
+      const response = await axios.put(
+        `${BACKEND_URL}/api/projects/${project._id}`, 
+        { status: newStatus },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      console.log("[JODNA] Update successful:", response.data);
+      setProjects(prev => prev.map(p => p._id === project._id ? response.data : p));
+
+    } catch (err) {
+      console.error("[JODNA] Update error:", err);
+      if (err.response) {
+         console.error("[JODNA] Server Responded with:", err.response.status, err.response.data);
+         alert(`Error: ${err.response.data.error || 'Server rejected request'}`);
+      } else if (err.request) {
+         console.error("[JODNA] No response received (Network Error).");
+         alert("Network Error: Backend not reachable. Ensure server is running and accessible.");
+      } else {
+         alert("Error: " + err.message);
+      }
+    }
+  };
+
+  const filteredProjects = projects.filter(project => {
+    if (filter === 'All') return true;
+    return project.status === filter;
+  });
+
+  const sortedProjects = [...filteredProjects].sort((a, b) => {
+    if (a.status === 'Closed' && b.status !== 'Closed') return 1;
+    if (a.status !== 'Closed' && b.status === 'Closed') return -1;
+    return new Date(b.updated_at) - new Date(a.updated_at);
+  });
+
   if (selectedProject) {
     return (
       <ProjectDetails
@@ -67,7 +112,19 @@ const Projects = ({ user, sandboxProxy }) => {
   return (
     <div className="projects-container">
       <div className="projects-header">
-        <h1>Projects</h1>
+        <div className="header-top">
+          <h1>Projects</h1>
+          <select 
+            className="status-filter-dropdown"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          >
+            <option value="All">All Projects</option>
+            <option value="Active">Active</option>
+            <option value="Closed">Closed</option>
+          </select>
+        </div>
+
         {canCreateProject && (
           <button className="btn-primary" onClick={() => setShowCreateModal(true)}>
             + New Project
@@ -83,19 +140,34 @@ const Projects = ({ user, sandboxProxy }) => {
         </div>
       ) : (
         <div className="projects-grid">
-          {projects.map(project => (
+          {sortedProjects.map(project => (
             <div
               key={project._id}
               className="project-card"
               onClick={() => setSelectedProject(project)}
             >
-              <div className="project-name">{project.name}</div>
+              <div className={`project-name ${project.status === 'Closed' ? 'closed' : ''}`}>
+                {project.name}
+              </div>
               <div className="project-description">{project.description || 'No description'}</div>
               <div className="project-meta">
                 <span>{new Date(project.updated_at).toLocaleDateString()}</span>
-                <span className={`status-badge status-${project.status.toLowerCase()}`}>
-                  {project.status}
-                </span>
+                {canCreateProject ? (
+                  <div className="project-status-select-container" onClick={e => e.stopPropagation()}>
+                     <select 
+                        className={`status-select ${project.status.toLowerCase()}`}
+                        value={project.status}
+                        onChange={(e) => handleStatusChange(e, project, e.target.value)}
+                     >
+                       <option value="Active">Active</option>
+                       <option value="Closed">Closed</option>
+                     </select>
+                  </div>
+                ) : (
+                  <span className={`status-badge status-${project.status.toLowerCase()}`}>
+                    {project.status}
+                  </span>
+                )}
               </div>
             </div>
           ))}

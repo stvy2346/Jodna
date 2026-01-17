@@ -22,7 +22,8 @@ if (process.env.MONGO_URI) {
 // Middleware
 app.use(cors({
     origin: true,
-    // credentials: true // Not needed for JWT usually, but good for some headers
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    credentials: true
 }));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
