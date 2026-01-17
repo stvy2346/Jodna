@@ -21,7 +21,7 @@ const projectSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['Active', 'Archived'],
+    enum: ['Active', 'Closed'],
     default: 'Active',
   },
   created_at: {

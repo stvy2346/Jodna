@@ -68,4 +68,35 @@ router.post('/', protect, ensureRole(['ADMIN', 'MANAGER']), async (req, res) => 
     }
 });
 
+// @desc    Update Project
+// @route   PUT /api/projects/:id
+router.put('/:id', protect, ensureRole(['ADMIN', 'MANAGER']), async (req, res) => {
+    console.log(`[JODNA-DEBUG] PUT /api/projects/${req.params.id} | User: ${req.user ? req.user.role : 'NoUser'} | Body:`, req.body);
+    try {
+        let project = await Project.findById(req.params.id);
+
+        if (!project) {
+            return res.status(404).json({ error: 'Project not found' });
+        }
+
+        // Check if user belongs to the same organization
+        if (!project.organization.equals(req.user.organization)) {
+             return res.status(404).json({ error: 'Project not found' });
+        }
+
+        // Update fields
+        const { name, description, status } = req.body;
+        if (name) project.name = name;
+        if (description) project.description = description;
+        if (status) project.status = status;
+
+        await project.save();
+        res.json(project);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+});
+
+
 module.exports = router;
