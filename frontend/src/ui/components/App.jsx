@@ -9,7 +9,7 @@ import "./App.css";
 
 // Import your components
 import Header from "./Header";
-import CreateOrganization from "./CreateOrganization";
+
 import JoinOrganization from "./JoinOrganization";
 import Home from "./Home";
 import Projects from "./Projects";
@@ -201,19 +201,8 @@ const App = ({ addOnUISdk, sandboxProxy }) => {
     const isAdmin = user && user.role === 'ADMIN';
     const hasOrganization = organization !== null;
     
-    // Admin without organization -> Create Organization
-    if (isAdmin && !hasOrganization) {
-        return (
-            <Theme system="express" scale="medium" color="light">
-                <div className="app-container">
-                    <CreateOrganization onOrgCreated={handleOrgCreated} user={user} />
-                </div>
-            </Theme>
-        );
-    }
-
-    // Non-admin without organization -> Show Join Organization Screen
-    if (!isAdmin && !hasOrganization) {
+    // User without organization -> Create or Join Organization
+    if (!hasOrganization) {
         return (
             <Theme system="express" scale="medium" color="light">
                 <div className="app-container">

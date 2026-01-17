@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Organization.css';
+import refreshIcon from '../assets/refresh.svg';
 
 const BACKEND_URL = 'http://localhost:5000';
 
@@ -95,22 +96,13 @@ const Organization = ({ organization, user, onLeave }) => {
               disabled={refreshing}
               title="Refresh members list"
             >
-              <svg
+              <img 
+                src={refreshIcon} 
+                alt="Refresh" 
+                className={`refresh-icon ${refreshing ? 'spinning' : ''}`}
                 width="12"
                 height="12"
-                viewBox="0 0 16 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className={refreshing ? 'spinning' : ''}
-              >
-                <path
-                  d="M13.5 8A5.5 5.5 0 1 1 2.5 8M2.5 8L5 5.5M2.5 8L5 10.5"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              />
               {refreshing ? '...' : ''}
             </button>
           )}
